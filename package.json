@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "test-upload:": "cd testUploadFiles && echo 'testing' > testFile10.txt  && aws s3 cp ./testFile10.txt s3://cdkprojectstack-inputbucket3bf8630a-1e0487ttp3nk0/testFile10.txt && cd .."
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@aws-cdk/aws-dynamodb": "^1.204.0",
     "@aws-cdk/aws-lambda": "^1.204.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.204.0",
     "@aws-cdk/aws-s3": "^1.204.0",
     "@aws-cdk/aws-s3-notifications": "^1.204.0",
     "aws-cdk-lib": "2.101.0",
