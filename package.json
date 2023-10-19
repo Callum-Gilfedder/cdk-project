@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "test-upload:": "cd testUploadFiles && echo 'testing' > testFile10.txt  && aws s3 cp ./testFile10.txt s3://cdkprojectstack-inputbucket3bf8630a-1e0487ttp3nk0/testFile10.txt && cd .."
+    "test-upload": "cd testUploadFiles && echo 'testing' > testFile15.txt  && aws s3 cp ./testFile15.txt s3://cdkprojectstack-inputbucket3bf8630a-1e0487ttp3nk0/testFile15.txt && cd .."
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",

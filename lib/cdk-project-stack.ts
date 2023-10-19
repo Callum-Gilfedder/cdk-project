@@ -4,11 +4,20 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as lambdaEventSources from 'aws-cdk-lib/aws-lambda-event-sources'
+import * as apigw from 'aws-cdk-lib/aws-apigateway';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as s3Notifications from 'aws-cdk-lib/aws-s3-notifications';
+
+
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkProjectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    // 
+    
 
     // input bucket where uploads go
     const inputBucket = new s3.Bucket(this, 'InputBucket', {
@@ -22,6 +31,23 @@ export class CdkProjectStack extends cdk.Stack {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       stream: dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
     })
+
+    const getAll = new lambda.Function(this, 'getAll', {
+      runtime: lambda.Runtime.NODEJS_16_X,
+      code: lambda.Code.fromAsset('lambda'),
+      handler: 'getAll.handler',
+      environment: {
+        TABLE_NAME: dynamoDbTable.tableName,
+      },
+    
+    })
+
+    const apiGateway = new apigw.LambdaRestApi(this, 'Endpoint', {
+      handler: getAll, 
+    })
+
+    dynamoDbTable.grantReadData(getAll);
+
 
     const S3ToDynamo = new lambda.Function(this, 'S3ToDynamo', {
       runtime: lambda.Runtime.NODEJS_16_X, 
@@ -45,6 +71,19 @@ export class CdkProjectStack extends cdk.Stack {
     const outputBucket = new s3.Bucket(this, 'OutputBucket', {
       versioned: false
     });
+
+    //  SNS topic
+    const snsTopic = new sns.Topic(this, 'MySnsTopic');
+
+    // Subscribe email to the SNS topic
+    snsTopic.addSubscription(new subscriptions.EmailSubscription('cg@bluetel.co.uk'));
+
+    // When an upload occurs, s3 will inform sns.
+    outputBucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED,
+      new s3Notifications.SnsDestination(snsTopic)
+    );
+
     // lambda function that extracts dynamodDB entry data and uploads to output s3.
     const DynamoToS3 = new lambda.Function(this, 'DynamoToS3', {
       runtime: lambda.Runtime.NODEJS_16_X, 
