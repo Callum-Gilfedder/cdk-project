@@ -1,11 +1,10 @@
-export {}
 
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName: string | undefined = process.env.TABLE_NAME;
 
-exports.handler = async (event: any): Promise<void> => {
+export const handler = async (event: any): Promise<void> => {
     console.log("Accessing s3 event...");
     const s3Event = event.Records[0].s3;
     console.log(s3Event);

@@ -1,9 +1,8 @@
-export {}
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const bucketName: string | undefined = process.env.BUCKET_NAME;
 
-exports.handler = async (event: any): Promise<void> => {
+export const handler = async (event: any): Promise<void> => {
     console.log("Event: ", event);
     try {
         const records = event.Records;
@@ -34,7 +33,7 @@ exports.handler = async (event: any): Promise<void> => {
                 console.log('Successfully uploaded data to S3');
             }
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error:', error);
         throw new Error(error);
     }

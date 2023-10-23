@@ -1,9 +1,8 @@
-export {}
 
 const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-exports.handler = async (event: any): Promise<{ statusCode: number, body: string | object }> => {
+export const handler = async (event: any): Promise<{ statusCode: number, body: string | object }> => {
     const tableName: string | undefined = process.env.TABLE_NAME;
 
     const params = {
