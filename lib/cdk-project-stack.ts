@@ -16,15 +16,10 @@ export class CdkProjectStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // 
-    
-
     // input bucket where uploads go
     const inputBucket = new s3.Bucket(this, 'InputBucket', {
       versioned: false
     })
-
-    // lambda function that extracts s3 file data and uploads to dynamodb.
 
     // dynamodb table where data from inputted files is entered
     const dynamoDbTable = new dynamodb.Table(this, 'Table', {
