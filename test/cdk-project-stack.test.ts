@@ -10,8 +10,6 @@ test('Stack should have a Lambda Function', () => {
     expect(stack).toHaveResource('AWS::Lambda::Function');
 });
 
-console.log(stack)
-
 test('Stack should have a DynamoDB Table', () => {
     expect(stack).toHaveResource('AWS::DynamoDB::Table');
 });
