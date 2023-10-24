@@ -36,9 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.handler = void 0;
 var AWS = require('aws-sdk');
 var dynamoDb = new AWS.DynamoDB.DocumentClient();
-exports.handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
     var tableName, params, data, fileData, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -69,3 +70,4 @@ exports.handler = function (event) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
+exports.handler = handler;

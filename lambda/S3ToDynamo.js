@@ -36,34 +36,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.handler = void 0;
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var dynamodb = new AWS.DynamoDB.DocumentClient();
 var tableName = process.env.TABLE_NAME;
-exports.handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var s3Event, params, s3Object, textData;
+var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+    var s3Event, decodedKey, params, s3Object, textData;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log("Accessing s3 event...");
                 s3Event = event.Records[0].s3;
+                console.log("Accessed s3event: ", s3Event);
                 console.log(s3Event);
-                console.log("Setting params...");
+                decodedKey = decodeURIComponent(s3Event.object.key.replace(/\+/g, " "));
                 params = {
                     Bucket: s3Event.bucket.name,
-                    Key: s3Event.object.key
+                    Key: decodedKey
                 };
-                console.log("Awaiting s3 getObject...");
+                console.log("Set parameters: ", params);
                 return [4 /*yield*/, s3.getObject(params).promise()];
             case 1:
                 s3Object = _a.sent();
                 textData = s3Object.Body.toString('utf-8');
-                console.log("Accessing tableName...");
+                console.log("Got s3Object: ", s3Object);
+                console.log("tableName: ", tableName);
                 console.log("Putting into dynamodb...");
                 return [4 /*yield*/, dynamodb.put({
                         TableName: tableName,
                         Item: {
-                            id: s3Event.object.key,
+                            id: decodedKey,
                             data: textData
                         }
                     }).promise()];
@@ -74,3 +76,4 @@ exports.handler = function (event) { return __awaiter(void 0, void 0, void 0, fu
         }
     });
 }); };
+exports.handler = handler;

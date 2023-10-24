@@ -34,7 +34,6 @@ export class CdkProjectStack extends cdk.Stack {
       environment: {
         TABLE_NAME: dynamoDbTable.tableName,
       },
-    
     })
 
     const apiGateway = new apigw.LambdaRestApi(this, 'Endpoint', {
@@ -97,6 +96,7 @@ export class CdkProjectStack extends cdk.Stack {
     DynamoToS3.addEventSource(dynamoDbEventSource)
 
      // Grant permissions
+    inputBucket.grantReadWrite(S3ToDynamo)
     inputBucket.grantRead(S3ToDynamo);
     dynamoDbTable.grantWriteData(S3ToDynamo);
     dynamoDbTable.grantReadData(DynamoToS3); 
