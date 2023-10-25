@@ -9,6 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "dynamo-get-all": "curl https://nzlv5u3vbl.execute-api.us-east-1.amazonaws.com/prod/",
     "test-upload": "cd testUploadFiles && echo 'testing' > testFile15.txt  && aws s3 cp ./testFile15.txt s3://cdkprojectstack-inputbucket3bf8630a-1e0487ttp3nk0/testFile15.txt && cd .."
   },
   "devDependencies": {

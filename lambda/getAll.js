@@ -39,8 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 var AWS = require('aws-sdk');
 var dynamoDb = new AWS.DynamoDB.DocumentClient();
+var maxRetries = 3;
+var retryDelay = 1000;
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var tableName, params, data, fileData, error_1;
+    var tableName, params, attempts, data, fileData, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -51,11 +53,15 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 if (!tableName) {
                     throw new Error('Environment variable TABLE_NAME is not set.');
                 }
+                attempts = 0;
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, dynamoDb.scan(params).promise()];
+                if (!(attempts < maxRetries)) return [3 /*break*/, 8];
+                _a.label = 2;
             case 2:
+                _a.trys.push([2, 4, , 7]);
+                return [4 /*yield*/, dynamoDb.scan(params).promise()];
+            case 3:
                 data = _a.sent();
                 console.log("Data: ", data);
                 fileData = data.Items.map(function (item) { return "File name: ".concat(item.id, ", File content: ").concat(item.data); }).join('\n');
@@ -64,14 +70,23 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                         statusCode: 200,
                         body: fileData
                     }];
-            case 3:
+            case 4:
                 error_1 = _a.sent();
                 console.error("Error fetching data from DynamoDB", error_1);
-                return [2 /*return*/, {
-                        statusCode: 500,
-                        body: JSON.stringify({ error: 'Failed to fetch data' })
-                    }];
-            case 4: return [2 /*return*/];
+                if (!(attempts < maxRetries)) return [3 /*break*/, 6];
+                console.log("Retrying ".concat(attempts + 1, "/").concat(maxRetries, "..."));
+                return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, retryDelay); })];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: return [3 /*break*/, 7];
+            case 7:
+                attempts++;
+                return [3 /*break*/, 1];
+            case 8: return [2 /*return*/, {
+                    statusCode: 500,
+                    body: JSON.stringify({ error: 'Failed to fetch data' })
+                }];
         }
     });
 }); };
