@@ -45,7 +45,7 @@ if (!bucketName) {
     throw new Error("Environment variable BUCKET_NAME is not set");
 }
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var records, record, newItem, itemJson, params, error_1;
+    var records, record, newItem, itemJson, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -62,19 +62,9 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 newItem = record.dynamodb.NewImage;
                 console.log("newItem: ", newItem);
                 itemJson = AWS.DynamoDB.Converter.unmarshall(newItem);
-                console.log(itemJson.data);
-                console.log(itemJson.id);
-                params = {
-                    Bucket: bucketName,
-                    Key: "".concat(itemJson.id),
-                    Body: itemJson.data,
-                    ContentType: 'text/plain'
-                };
-                console.log('Uploading data to S3');
-                return [4 /*yield*/, s3.putObject(params).promise()];
+                return [4 /*yield*/, putIntoS3(itemJson)];
             case 2:
                 _a.sent();
-                console.log('Successfully uploaded data to S3');
                 _a.label = 3;
             case 3: return [3 /*break*/, 5];
             case 4:
@@ -86,3 +76,27 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 exports.handler = handler;
+function putIntoS3(itemJson) {
+    return __awaiter(this, void 0, void 0, function () {
+        var params;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log(itemJson.data);
+                    console.log(itemJson.id);
+                    params = {
+                        Bucket: bucketName,
+                        Key: "".concat(itemJson.id),
+                        Body: itemJson.data,
+                        ContentType: 'text/plain'
+                    };
+                    console.log('Uploading data to S3');
+                    return [4 /*yield*/, s3.putObject(params).promise()];
+                case 1:
+                    _a.sent();
+                    console.log('Successfully uploaded data to S3');
+                    return [2 /*return*/];
+            }
+        });
+    });
+}

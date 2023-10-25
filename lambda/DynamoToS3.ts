@@ -21,20 +21,7 @@ export const handler = async (event: any): Promise<void> => {
                 console.log("newItem: ", newItem);
 
                 const itemJson = AWS.DynamoDB.Converter.unmarshall(newItem);
-
-                console.log(itemJson.data);
-                console.log(itemJson.id);
-
-                const params = {
-                    Bucket: bucketName,
-                    Key: `${itemJson.id}`,
-                    Body: itemJson.data,
-                    ContentType: 'text/plain'
-                };
-
-                console.log('Uploading data to S3');
-                await s3.putObject(params).promise();
-                console.log('Successfully uploaded data to S3');
+                await putIntoS3(itemJson)
             }
         }
     } catch (error: any) {
@@ -42,3 +29,20 @@ export const handler = async (event: any): Promise<void> => {
         throw new Error(error);
     }
 };
+
+async function putIntoS3(itemJson: any) {
+    console.log(itemJson.data);
+    console.log(itemJson.id);
+
+    const params = {
+        Bucket: bucketName,
+        Key: `${itemJson.id}`,
+        Body: itemJson.data,
+        ContentType: 'text/plain'
+    };
+
+    console.log('Uploading data to S3');
+    await s3.putObject(params).promise();
+    console.log('Successfully uploaded data to S3');
+
+}
