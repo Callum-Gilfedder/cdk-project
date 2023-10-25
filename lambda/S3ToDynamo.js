@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
-var AWS = require('aws-sdk');
+var AWS = require("aws-sdk");
 var s3 = new AWS.S3();
 var dynamodb = new AWS.DynamoDB.DocumentClient();
 var tableName = process.env.TABLE_NAME;
@@ -53,7 +53,6 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 _a.trys.push([0, 3, , 4]);
                 s3Event = event.Records[0].s3;
                 console.log("Accessed s3event: ", s3Event);
-                console.log(s3Event);
                 decodedKey = decodeURIComponent(s3Event.object.key.replace(/\+/g, " "));
                 params = {
                     Bucket: s3Event.bucket.name,
@@ -63,20 +62,15 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, s3.getObject(params).promise()];
             case 1:
                 s3Object = _a.sent();
+                if (s3Object.Body == undefined) {
+                    throw new Error("s3Object.Body is undefined");
+                }
                 textData = s3Object.Body.toString('utf-8');
                 console.log("Got s3Object: ", s3Object);
-                console.log("tableName: ", tableName);
-                console.log("Putting into dynamodb...");
-                return [4 /*yield*/, dynamodb.put({
-                        TableName: tableName,
-                        Item: {
-                            id: decodedKey,
-                            data: textData
-                        }
-                    }).promise()];
+                return [4 /*yield*/, putIntoDynamo(decodedKey, textData)];
             case 2:
                 _a.sent();
-                console.log("DynamoDB entry added");
+                console.log("Data put into DynamoDB successfully.");
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
@@ -87,3 +81,24 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 exports.handler = handler;
+function putIntoDynamo(decodedKey, textData) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log("Putting into dynamodb...");
+                    return [4 /*yield*/, dynamodb.put({
+                            TableName: tableName,
+                            Item: {
+                                id: decodedKey,
+                                data: textData
+                            }
+                        }).promise()];
+                case 1:
+                    _a.sent();
+                    console.log("DynamoDB entry added");
+                    return [2 /*return*/];
+            }
+        });
+    });
+}

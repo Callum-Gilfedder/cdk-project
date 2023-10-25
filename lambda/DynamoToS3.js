@@ -45,7 +45,7 @@ if (!bucketName) {
     throw new Error("Environment variable BUCKET_NAME is not set");
 }
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var records, record, newItem, itemJson, itemString, params, error_1;
+    var records, record, newItem, itemJson, params, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -62,7 +62,6 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 newItem = record.dynamodb.NewImage;
                 console.log("newItem: ", newItem);
                 itemJson = AWS.DynamoDB.Converter.unmarshall(newItem);
-                itemString = JSON.stringify(itemJson, null, 2);
                 console.log(itemJson.data);
                 console.log(itemJson.id);
                 params = {

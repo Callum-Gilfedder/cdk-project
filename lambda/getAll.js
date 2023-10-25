@@ -48,6 +48,9 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 params = {
                     TableName: tableName
                 };
+                if (!tableName) {
+                    throw new Error('Environment variable TABLE_NAME is not set.');
+                }
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
