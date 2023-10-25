@@ -42,10 +42,11 @@ var s3 = new AWS.S3();
 var dynamodb = new AWS.DynamoDB.DocumentClient();
 var tableName = process.env.TABLE_NAME;
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var s3Event, decodedKey, params, s3Object, textData;
+    var s3Event, decodedKey, params, s3Object, textData, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                _a.trys.push([0, 3, , 4]);
                 s3Event = event.Records[0].s3;
                 console.log("Accessed s3event: ", s3Event);
                 console.log(s3Event);
@@ -72,7 +73,12 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
             case 2:
                 _a.sent();
                 console.log("DynamoDB entry added");
-                return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _a.sent();
+                console.error("An error occurred: ", error_1);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

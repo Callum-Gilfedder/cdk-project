@@ -76,7 +76,7 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
             case 3: return [3 /*break*/, 5];
             case 4:
                 error_1 = _a.sent();
-                console.error('Error:', error_1);
+                console.error('An error occurred: ', error_1);
                 throw new Error(error_1);
             case 5: return [2 /*return*/];
         }

@@ -2,6 +2,11 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const bucketName: string | undefined = process.env.BUCKET_NAME;
 
+// Environment variable validation
+if (!bucketName) {
+    throw new Error("Environment variable BUCKET_NAME is not set")
+}
+
 export const handler = async (event: any): Promise<void> => {
     console.log("Event: ", event);
     try {

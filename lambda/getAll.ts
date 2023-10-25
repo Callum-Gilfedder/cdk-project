@@ -8,9 +8,12 @@ export const handler = async (event: any): Promise<{ statusCode: number, body: s
         TableName: tableName
     };
 
+
     try {
         const data = await dynamoDb.scan(params).promise();
+        console.log("Data: ", data)
         const fileData: string = data.Items.map((item: any) => `File name: ${item.id}, File content: ${item.data}`).join('\n');
+        console.log("File content: ", fileData)
         return {
             statusCode: 200,
             body: fileData

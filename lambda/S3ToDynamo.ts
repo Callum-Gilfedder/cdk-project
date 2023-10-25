@@ -5,6 +5,11 @@ const s3 = new AWS.S3();
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName: string | undefined = process.env.TABLE_NAME;
 
+// Environment variable validation
+if (!tableName) {
+    throw new Error("Environment variable TABLE_NAME is not set")
+}
+
 export const handler = async (event: any): Promise<void> => {
     try {
         const s3Event = event.Records[0].s3;
