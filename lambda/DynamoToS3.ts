@@ -34,7 +34,7 @@ export const handler = async (event: any): Promise<void> => {
             }
         }
     } catch (error: any) {
-        console.error('Error:', error);
+        console.error('An error occurred: ', error);
         throw new Error(error);
     }
 };
