@@ -54,7 +54,9 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, dynamoDb.scan(params).promise()];
             case 2:
                 data = _a.sent();
+                console.log("Data: ", data);
                 fileData = data.Items.map(function (item) { return "File name: ".concat(item.id, ", File content: ").concat(item.data); }).join('\n');
+                console.log("File content: ", fileData);
                 return [2 /*return*/, {
                         statusCode: 200,
                         body: fileData

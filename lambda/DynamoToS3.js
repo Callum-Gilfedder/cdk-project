@@ -40,6 +40,10 @@ exports.handler = void 0;
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var bucketName = process.env.BUCKET_NAME;
+// Environment variable validation
+if (!bucketName) {
+    throw new Error("Environment variable BUCKET_NAME is not set");
+}
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
     var records, record, newItem, itemJson, itemString, params, error_1;
     return __generator(this, function (_a) {

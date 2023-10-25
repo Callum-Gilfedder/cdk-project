@@ -7,8 +7,10 @@ export const handler = async (event: any): Promise<{ statusCode: number, body: s
     const params = {
         TableName: tableName
     };
-
-
+    if (!tableName) {
+        throw new Error('Environment variable TABLE_NAME is not set.');
+    } 
+    
     try {
         const data = await dynamoDb.scan(params).promise();
         console.log("Data: ", data)

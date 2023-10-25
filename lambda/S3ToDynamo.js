@@ -41,6 +41,10 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var dynamodb = new AWS.DynamoDB.DocumentClient();
 var tableName = process.env.TABLE_NAME;
+// Environment variable validation
+if (!tableName) {
+    throw new Error("Environment variable TABLE_NAME is not set");
+}
 var handler = function (event) { return __awaiter(void 0, void 0, void 0, function () {
     var s3Event, decodedKey, params, s3Object, textData, error_1;
     return __generator(this, function (_a) {

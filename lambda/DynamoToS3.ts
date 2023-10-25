@@ -5,7 +5,7 @@ const bucketName: string | undefined = process.env.BUCKET_NAME;
 // Environment variable validation
 if (!bucketName) {
     throw new Error("Environment variable BUCKET_NAME is not set")
-}
+} 
 
 export const handler = async (event: any): Promise<void> => {
     console.log("Event: ", event);
@@ -21,7 +21,6 @@ export const handler = async (event: any): Promise<void> => {
                 console.log("newItem: ", newItem);
 
                 const itemJson = AWS.DynamoDB.Converter.unmarshall(newItem);
-                const itemString: string = JSON.stringify(itemJson, null, 2);
 
                 console.log(itemJson.data);
                 console.log(itemJson.id);
