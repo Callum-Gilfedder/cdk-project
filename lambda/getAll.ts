@@ -14,9 +14,9 @@ export const handler = async (event: any): Promise<{ statusCode: number, body: s
     } 
     for (let attempts: number = 0; attempts < maxRetries; attempts++ ) {
         try {
-            const data = await dynamoDb.scan(params).promise();
+            const data = await fetchData(params)
             console.log("Data: ", data)
-            const fileData: string = data.Items.map((item: any) => `File name: ${item.id}, File content: ${item.data}`).join('\n');
+            const fileData: string = formatData(data)
             console.log("File content: ", fileData)
             return {
                 statusCode: 200,
@@ -35,3 +35,12 @@ export const handler = async (event: any): Promise<{ statusCode: number, body: s
         body: JSON.stringify({ error: 'Failed to fetch data' })
     };
 };
+
+
+async function fetchData(params: object) {
+    return await dynamoDb.scan(params).promise();
+}
+
+function formatData(data: any) {
+    return data.Items.map((item: any) => `File name: ${item.id}, File content: ${item.data}`).join('\n');
+}

@@ -60,11 +60,11 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
                 _a.label = 2;
             case 2:
                 _a.trys.push([2, 4, , 7]);
-                return [4 /*yield*/, dynamoDb.scan(params).promise()];
+                return [4 /*yield*/, fetchData(params)];
             case 3:
                 data = _a.sent();
                 console.log("Data: ", data);
-                fileData = data.Items.map(function (item) { return "File name: ".concat(item.id, ", File content: ").concat(item.data); }).join('\n');
+                fileData = formatData(data);
                 console.log("File content: ", fileData);
                 return [2 /*return*/, {
                         statusCode: 200,
@@ -91,3 +91,16 @@ var handler = function (event) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 exports.handler = handler;
+function fetchData(params) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, dynamoDb.scan(params).promise()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+function formatData(data) {
+    return data.Items.map(function (item) { return "File name: ".concat(item.id, ", File content: ").concat(item.data); }).join('\n');
+}
